@@ -6,6 +6,51 @@ peer.js wrapper written by cljs
 
 FIXME: Write a paragraph about the library/project and highlight its goals.
 
+## Examples
+
+### Create the Peer EDN
+
+```clojure 
+(ns peer-test.core
+  (:require [peer-cljs.core :refer :all]))
+
+(go
+  (def my-peer
+    (<! (peer my-api-key))))
+```
+
+### Data connections
+
+#### Start connection
+
+```clojure
+(go
+  (def my-connection
+    (<! (connect my-peer another-peer-id))))
+```
+
+#### Receive connection
+
+```clojure
+(go
+  (def my-connection
+    (<! accept my-peer)))
+```
+
+#### Send messages
+
+```clojure
+(send! my-connection "Hello!")
+```
+
+#### Receive messages
+
+```clojure
+(go 
+  (while true
+    (println (<! (receive my-connection)))))
+```
+
 ## Setup
 
 To get an interactive development environment run:
