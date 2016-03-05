@@ -38,8 +38,10 @@
   [peer]
   "Ready to be connected by another peer
    (go block)"
-  (go (let [conn (<! (fetch-conn peer))]
-        (->Connection (.-peer conn) conn (chan)))))
+  (go (let [conn-obj (<! (fetch-conn peer))
+            c (chan)]
+        (.on conn-obj "data" #(put! c %))
+        (->Connection (.-peer conn-obj) conn-obj c))))
 
 (defn send!
   [conn data]
