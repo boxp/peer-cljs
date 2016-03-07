@@ -6,18 +6,26 @@
 
 (defrecord Connection [another-id obj c])
 
-(defn- fetch-peer-id "Fetch peer-id by peer-obj (go block)" [peer-obj]
+(defn- fetch-peer-id "Fetch peer-id by peer-obj (go block)" 
+  [peer-obj]
   (go (let [c (chan)]
         (.on peer-obj "open" #(put! c %))
         (<! c))))
 
 (defn peer
   "Create peer EDN (go block)"
-  [api-key]
-  (go (let [peer-obj (js/Peer. #js {"key" api-key})]
-        (->Peer (<! (fetch-peer-id peer-obj)) 
-                peer-obj 
-                api-key))))
+  ([api-key]
+    (go (let [peer-obj (js/Peer. #js {"key" api-key})]
+          (->Peer (<! (fetch-peer-id peer-obj)) 
+                  peer-obj 
+                  api-key))))
+  ([host port path]
+    (go (let [peer-obj (js/Peer. #js {"host" host
+                                      "port" port
+                                      "path" path})]
+          (->Peer (<! (fetch-peer-id peer-obj)) 
+                  peer-obj 
+                  api-key)))))
 
 (defn connect
   [peer id]
