@@ -19,13 +19,13 @@
           (->Peer (<! (fetch-peer-id peer-obj)) 
                   peer-obj 
                   api-key))))
-  ([host port path]
+  ([id host port path]
     (go (let [peer-obj (js/Peer. #js {"host" host
                                       "port" port
                                       "path" path})]
           (->Peer (<! (fetch-peer-id peer-obj)) 
                   peer-obj 
-                  api-key)))))
+                  id)))))
 
 (defn connect
   [peer id]
